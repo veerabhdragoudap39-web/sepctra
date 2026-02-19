@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- ══ EMAILJS ══ -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init("pE3NAPEpcB-49A8Wq");
+</script>
 
 <!-- ══ FIREBASE ══ -->
 <script type="module">
@@ -1015,21 +1020,42 @@ async function placeOrder() {
   const name  = document.getElementById('buyerName').value.trim();
   const email = document.getElementById('buyerEmail').value.trim();
   const addr  = document.getElementById('buyerAddr').value.trim();
+  const phone = document.getElementById('buyerPhone').value.trim();
   if (!name||!email||!addr) { showToast('⚠️ Please fill all required fields.'); return; }
 
+  const itemsList = cart.map(c => `${c.name} x${c.qty} = ${c.currency}${(c.price*c.qty).toFixed(2)}`).join('\n');
+  const total = cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const currency = cart[0]?.currency || '$';
+
   const order = {
-    buyer: { name, email, phone: document.getElementById('buyerPhone').value, address: addr },
+    buyer: { name, email, phone, address: addr },
     items: cart.map(c => ({ name:c.name, qty:c.qty, price:c.price, currency:c.currency })),
-    total: cart.reduce((a,c)=>a+c.price*c.qty,0),
+    total,
     placedAt: Date.now()
   };
 
+  // ── Save to Firebase ──
   try {
     if (window._db) {
       const { collection, addDoc } = fs();
       await addDoc(collection(db(),'orders'), order);
     }
   } catch(e) { console.error(e); }
+
+  // ── Send Email Notification via EmailJS ──
+  try {
+    await emailjs.send('service_4zkwio7', 'a06m4xm', {
+      buyer_name:    name,
+      buyer_email:   email,
+      buyer_phone:   phone || 'Not provided',
+      buyer_address: addr,
+      order_items:   itemsList,
+      order_total:   currency + total.toFixed(2)
+    });
+    console.log('Order notification email sent!');
+  } catch(e) {
+    console.error('Email failed:', e);
+  }
 
   cart = [];
   renderCart(); updateBadge(); renderProducts();

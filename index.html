@@ -368,6 +368,127 @@
   .toast.show { transform:translateY(0); opacity:1; }
 
   footer { background:var(--dark); color:#555; text-align:center; padding:24px; font-size:0.82rem; border-top:1px solid #222; }
+  /* ── SPECIAL OFFERS SECTION ── */
+  .offers-section { padding:0 48px 48px; }
+  .offers-header { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; margin-bottom:6px; }
+  .offers-sub { color:#888; font-size:0.9rem; margin-bottom:24px; }
+
+  .offers-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+
+  .offer-card {
+    background:linear-gradient(135deg,#1a1a1a,#2d2510);
+    border-radius:16px; padding:24px; position:relative; overflow:hidden;
+    border:1px solid #333; animation:fadeIn 0.4s ease;
+    transition:transform 0.25s,box-shadow 0.25s;
+  }
+  .offer-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.2); }
+  .offer-card::before {
+    content:''; position:absolute; top:-40px; right:-40px;
+    width:120px; height:120px;
+    background:radial-gradient(circle,rgba(200,169,110,0.15),transparent 70%);
+    border-radius:50%;
+  }
+  .offer-badge {
+    display:inline-block; background:var(--accent); color:#111;
+    font-size:0.72rem; font-weight:700; letter-spacing:0.08em;
+    text-transform:uppercase; padding:4px 10px; border-radius:20px; margin-bottom:12px;
+  }
+  .offer-title { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:#fff; margin-bottom:6px; }
+  .offer-desc { color:#aaa; font-size:0.85rem; margin-bottom:14px; line-height:1.5; }
+  .offer-discount { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; color:var(--accent); }
+  .offer-valid { color:#666; font-size:0.75rem; margin-top:4px; }
+
+  .admin-offer-btns { position:absolute; top:10px; right:10px; display:none; gap:6px; }
+  .admin-mode .admin-offer-btns { display:flex; }
+
+  .no-offers { text-align:center; padding:40px; color:#aaa; grid-column:1/-1; font-size:0.95rem; }
+
+  /* ── MY ORDERS PAGE ── */
+  .orders-page {
+    display:none; position:fixed; inset:0; background:var(--bg);
+    z-index:800; overflow-y:auto; padding:48px;
+  }
+  .orders-page.open { display:block; }
+
+  .orders-page-header {
+    display:flex; align-items:center; gap:16px; margin-bottom:32px;
+  }
+  .orders-back {
+    background:none; border:1.5px solid #ddd; border-radius:8px;
+    padding:8px 14px; cursor:pointer; font-family:'DM Sans',sans-serif;
+    font-size:0.85rem; transition:all 0.2s;
+  }
+  .orders-back:hover { border-color:var(--accent); color:var(--accent); }
+
+  .order-card {
+    background:#fff; border-radius:14px; padding:24px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.07); margin-bottom:20px;
+    border:1px solid #eee;
+  }
+  .order-card-head {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:16px; flex-wrap:wrap; gap:12px;
+  }
+  .order-id { font-size:0.78rem; color:#aaa; margin-bottom:4px; }
+  .order-date { font-size:0.82rem; color:#888; }
+  .order-status {
+    padding:5px 12px; border-radius:20px; font-size:0.78rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .status-pending { background:#fff3cd; color:#856404; }
+  .status-confirmed { background:#d1e7dd; color:#0a3622; }
+  .status-cancelled { background:#f8d7da; color:#842029; }
+  .status-returned { background:#e2e3e5; color:#41464b; }
+
+  .order-items-list { margin-bottom:16px; }
+  .order-item-row {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 0; border-bottom:1px solid #f5f5f5;
+  }
+  .order-item-row:last-child { border-bottom:none; }
+  .order-item-img {
+    width:50px; height:50px; border-radius:8px; overflow:hidden;
+    background:#f0ebe0; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+  }
+  .order-item-img img { width:100%; height:100%; object-fit:cover; }
+  .order-item-name { font-weight:600; font-size:0.9rem; }
+  .order-item-qty { font-size:0.82rem; color:#888; }
+  .order-item-price { margin-left:auto; font-weight:600; color:var(--accent); font-family:'Playfair Display',serif; }
+
+  .order-total-row {
+    display:flex; justify-content:space-between;
+    padding-top:12px; font-weight:700; font-size:1rem;
+    border-top:2px solid #f0f0f0;
+  }
+  .order-total-amt { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--accent); }
+
+  .order-actions { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .order-action-btn {
+    padding:8px 16px; border-radius:8px; border:none; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:600;
+    transition:all 0.2s;
+  }
+  .btn-cancel { background:#fff0f0; color:#e44; border:1.5px solid #fcc; }
+  .btn-cancel:hover { background:#e44; color:#fff; }
+  .btn-return { background:#f0f4ff; color:#446; border:1.5px solid #cce; }
+  .btn-return:hover { background:#446; color:#fff; }
+  .btn-disabled { background:#f5f5f5; color:#aaa; border:1.5px solid #eee; cursor:not-allowed; }
+
+  .no-orders { text-align:center; padding:60px 20px; color:#aaa; }
+  .no-orders .ei { font-size:3rem; display:block; margin-bottom:12px; }
+
+  /* ── ORDERS BTN IN HEADER ── */
+  .orders-btn {
+    background:none; border:1.5px solid #333; color:#888;
+    border-radius:8px; padding:8px 14px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-size:0.82rem; transition:all 0.2s;
+  }
+  .orders-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* ── ADD OFFER MODAL ── */
+  .offer-modal .modal { max-width:460px; }
+
 </style>
 </head>
 <body>
@@ -477,6 +598,7 @@
   <div class="store-logo" id="headerLogo"><span style="font-size:2rem;">✦</span></div>
   <span class="store-name" id="headerName">My Store</span>
   <div class="header-right">
+    <button class="orders-btn" onclick="openOrdersPage()">📦 My Orders</button>
     <button class="cart-btn" onclick="openCart()">
       🛒 Cart
       <span class="cart-badge" id="cartBadge">0</span>
@@ -514,7 +636,13 @@
   </div>
 
   <div class="bar-sep"></div>
+  <div style="display:flex;flex-direction:column;gap:3px;">
+    <span style="font-size:0.67rem;color:#555;text-transform:uppercase;letter-spacing:0.08em;">Your Phone (sent to customers)</span>
+    <input type="text" class="bar-input" id="storePhoneIn" value="" placeholder="+91 9876543210" style="width:170px;" oninput="updateStorePhone()">
+  </div>
+  <div class="bar-sep"></div>
   <button class="bb bb-gold" onclick="openProductModal()">+ Add Product</button>
+  <button class="bb bb-outline" onclick="openOfferModal()">🏷️ Add Offer</button>
   <button class="bb bb-outline" onclick="openModal('changePwModal')">🔑 Password</button>
   <button class="bb bb-red" onclick="adminLogout()">Logout</button>
 </div>
@@ -527,6 +655,15 @@
 </div>
 
 <!-- PRODUCTS -->
+<!-- SPECIAL OFFERS SECTION -->
+<section class="offers-section" id="offersSection" style="padding-top:48px;">
+  <div class="offers-header">🏷️ Special Offers</div>
+  <div class="offers-sub">Exclusive deals just for you</div>
+  <div class="offers-grid" id="offersGrid">
+    <div class="no-offers">No special offers right now. Check back soon! 🎁</div>
+  </div>
+</section>
+
 <main class="products-section" id="mainSection">
   <div class="products-header">Our Products</div>
   <div class="products-sub">Hand-picked quality items just for you</div>
@@ -559,6 +696,67 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- ADD OFFER MODAL -->
+<div class="modal-overlay offer-modal" id="offerModal">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close-btn" onclick="closeModal('offerModal')">×</button>
+    <h2 id="offerModalTitle">🏷️ Add Special Offer</h2>
+    <p class="sub">Create a special deal for your customers.</p>
+    <input type="text" id="offerTitle" placeholder="Offer title e.g. Summer Sale *">
+    <textarea id="offerDesc" placeholder="Description e.g. Get 20% off on all shirts"></textarea>
+    <input type="text" id="offerDiscount" placeholder="Discount e.g. 20% OFF or Buy 1 Get 1 *">
+    <input type="text" id="offerValid" placeholder="Valid until e.g. 31 Dec 2025">
+    <button class="modal-btn modal-btn-primary" onclick="saveOffer()">Save Offer</button>
+  </div>
+</div>
+
+<!-- CANCEL ORDER MODAL -->
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeModal('cancelModal')">×</button>
+    <h2>❌ Cancel Order</h2>
+    <p class="sub">Please tell us why you want to cancel.</p>
+    <select id="cancelReason">
+      <option value="">Select a reason *</option>
+      <option>Changed my mind</option>
+      <option>Ordered by mistake</option>
+      <option>Found a better price</option>
+      <option>Delivery taking too long</option>
+      <option>Other</option>
+    </select>
+    <textarea id="cancelNote" placeholder="Additional notes (optional)"></textarea>
+    <button class="modal-btn modal-btn-primary" style="background:#e44;" onclick="confirmCancel()">Confirm Cancellation</button>
+  </div>
+</div>
+
+<!-- RETURN ORDER MODAL -->
+<div class="modal-overlay" id="returnModal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeModal('returnModal')">×</button>
+    <h2>🔄 Return Order</h2>
+    <p class="sub">Tell us what you'd like to return and why.</p>
+    <select id="returnReason">
+      <option value="">Select a reason *</option>
+      <option>Item damaged / defective</option>
+      <option>Wrong item received</option>
+      <option>Item not as described</option>
+      <option>Changed my mind</option>
+      <option>Other</option>
+    </select>
+    <textarea id="returnNote" placeholder="Additional notes (optional)"></textarea>
+    <button class="modal-btn modal-btn-primary" style="background:#446;" onclick="confirmReturn()">Submit Return Request</button>
+  </div>
+</div>
+
+<!-- MY ORDERS PAGE -->
+<div class="orders-page" id="ordersPage">
+  <div class="orders-page-header">
+    <button class="orders-back" onclick="closeOrdersPage()">← Back to Store</button>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;">📦 My Orders</h2>
+  </div>
+  <div id="ordersList"></div>
+</div>
+
 <footer>
   <span id="footerName">My Store</span> &nbsp;·&nbsp; Powered by ❤️ &nbsp;·&nbsp; All rights reserved
 </footer>
@@ -572,6 +770,7 @@ let products = [];
 let cart = [];
 let wishlist = new Set();
 let branding = { name:'My Store', symbol:'✦', accent:'#c8a96e', logo:null, password:'admin123' };
+let STORE_PHONE = localStorage.getItem('store_phone') || '9611265549';
 let editingProductId = null;
 let currentProdImg = null;
 let logoDataUrl = null;
@@ -615,6 +814,8 @@ async function loadStoreFromDB() {
     }
 
     // Live-listen to products (auto-updates for all visitors!)
+    loadOffersFromDB();
+
     onSnapshot(collection(db(), 'products'), snap => {
       products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderProducts();
@@ -1027,20 +1228,28 @@ async function placeOrder() {
   const total = cart.reduce((a,c)=>a+c.price*c.qty,0);
   const currency = cart[0]?.currency || '$';
 
+  const orderId = Date.now();
   const order = {
+    id: orderId,
+    status: 'Pending',
     buyer: { name, email, phone, address: addr },
-    items: cart.map(c => ({ name:c.name, qty:c.qty, price:c.price, currency:c.currency })),
+    items: cart.map(c => ({ name:c.name, qty:c.qty, price:c.price, currency:c.currency, image:c.image||null })),
     total,
-    placedAt: Date.now()
+    placedAt: orderId
   };
 
   // ── Save to Firebase ──
   try {
     if (window._db) {
       const { collection, addDoc } = fs();
-      await addDoc(collection(db(),'orders'), order);
+      const ref = await addDoc(collection(db(),'orders'), order);
+      order.firebaseId = ref.id;
     }
   } catch(e) { console.error(e); }
+
+  // ── Save to local orders list (for My Orders page) ──
+  myOrders.push(order);
+  localStorage.setItem('my_orders', JSON.stringify(myOrders));
 
   // ── Build plain text product list (images too large for email) ──
   const itemsHTML = cart.map((c, i) => {
@@ -1059,7 +1268,7 @@ async function placeOrder() {
     ${itemsHTML}
   </table>`;
 
-  // ── Send Email Notification via EmailJS ──
+  // ── 1. Notify ADMIN about new order ──
   try {
     await emailjs.send('service_4zkwi07', 'template_1cw499s', {
       buyer_name:    name,
@@ -1067,12 +1276,26 @@ async function placeOrder() {
       buyer_phone:   phone || 'Not provided',
       buyer_address: addr,
       order_items:   itemsTable,
-      order_total:   currency + total.toFixed(2)
+      order_total:   currency + total.toFixed(2),
+      order_type:    'NEW ORDER',
+      store_phone:   STORE_PHONE
     });
-    console.log('Order notification email sent!');
-  } catch(e) {
-    console.error('Email failed:', e);
-  }
+    console.log('Admin notified!');
+  } catch(e) { console.error('Admin email failed:', e); }
+
+  // ── 2. Send confirmation email TO CUSTOMER ──
+  try {
+    await emailjs.send('service_4zkwi07', 'template_8cuoe9n', {
+      buyer_name:    name,
+      buyer_email:   email,
+      buyer_address: addr,
+      order_items:   itemsTable,
+      order_total:   currency + total.toFixed(2),
+      store_name:    document.getElementById('headerName').textContent,
+      store_phone:   STORE_PHONE
+    });
+    console.log('Customer confirmation sent!');
+  } catch(e) { console.error('Customer email failed:', e); }
 
   cart = [];
   renderCart(); updateBadge(); renderProducts();
@@ -1106,6 +1329,303 @@ function showToast(msg) {
 
 function showSaving() { document.getElementById('savingIndicator').classList.add('show'); }
 function hideSaving()  { document.getElementById('savingIndicator').classList.remove('show'); }
+
+// ════════════════════════════════════════════
+// SPECIAL OFFERS
+// ════════════════════════════════════════════
+let offers = JSON.parse(localStorage.getItem('store_offers') || '[]');
+let editingOfferId = null;
+
+function openOfferModal(id = null) {
+  editingOfferId = id;
+  const o = id ? offers.find(x => x.id === id) : null;
+  document.getElementById('offerModalTitle').textContent = o ? '✏️ Edit Offer' : '🏷️ Add Special Offer';
+  document.getElementById('offerTitle').value    = o ? o.title    : '';
+  document.getElementById('offerDesc').value     = o ? o.desc     : '';
+  document.getElementById('offerDiscount').value = o ? o.discount : '';
+  document.getElementById('offerValid').value    = o ? o.valid    : '';
+  openModal('offerModal');
+}
+
+async function saveOffer() {
+  const title    = document.getElementById('offerTitle').value.trim();
+  const discount = document.getElementById('offerDiscount').value.trim();
+  if (!title || !discount) { showToast('⚠️ Please fill title and discount.'); return; }
+
+  const data = {
+    title, discount,
+    desc:  document.getElementById('offerDesc').value.trim(),
+    valid: document.getElementById('offerValid').value.trim(),
+  };
+
+  if (editingOfferId) {
+    const idx = offers.findIndex(o => o.id === editingOfferId);
+    offers[idx] = { ...offers[idx], ...data };
+    showToast('✏️ Offer updated!');
+  } else {
+    offers.push({ id: Date.now().toString(), ...data });
+    showToast('🏷️ Offer added!');
+  }
+
+  // Save to Firebase if available
+  try {
+    if (window._db) {
+      const { doc, setDoc } = fs();
+      await setDoc(doc(window._db, 'store', 'offers'), { list: offers });
+    }
+  } catch(e) { console.error(e); }
+
+  localStorage.setItem('store_offers', JSON.stringify(offers));
+  closeModal('offerModal');
+  renderOffers();
+}
+
+async function deleteOffer(id) {
+  if (!confirm('Delete this offer?')) return;
+  offers = offers.filter(o => o.id !== id);
+  localStorage.setItem('store_offers', JSON.stringify(offers));
+  try {
+    if (window._db) {
+      const { doc, setDoc } = fs();
+      await setDoc(doc(window._db, 'store', 'offers'), { list: offers });
+    }
+  } catch(e) { console.error(e); }
+  renderOffers();
+  showToast('🗑️ Offer deleted.');
+}
+
+function renderOffers() {
+  const grid = document.getElementById('offersGrid');
+  const section = document.getElementById('offersSection');
+
+  // Load from Firebase if available
+  if (!offers.length) {
+    grid.innerHTML = '<div class="no-offers">No special offers right now. Check back soon! 🎁</div>';
+    if (!isAdmin) section.style.display = 'none';
+    else section.style.display = 'block';
+    return;
+  }
+
+  section.style.display = 'block';
+  grid.innerHTML = offers.map(o => `
+    <div class="offer-card">
+      <div class="admin-offer-btns">
+        <button class="card-btn" onclick="openOfferModal('${o.id}')">✏️</button>
+        <button class="card-btn del" onclick="deleteOffer('${o.id}')">🗑</button>
+      </div>
+      <span class="offer-badge">Special Offer</span>
+      <div class="offer-title">${o.title}</div>
+      ${o.desc ? `<div class="offer-desc">${o.desc}</div>` : ''}
+      <div class="offer-discount">${o.discount}</div>
+      ${o.valid ? `<div class="offer-valid">Valid until: ${o.valid}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// Load offers from Firebase
+async function loadOffersFromDB() {
+  try {
+    if (window._db) {
+      const { doc, getDoc } = fs();
+      const snap = await getDoc(doc(window._db, 'store', 'offers'));
+      if (snap.exists() && snap.data().list) {
+        offers = snap.data().list;
+        localStorage.setItem('store_offers', JSON.stringify(offers));
+      }
+    }
+  } catch(e) { console.error(e); }
+  renderOffers();
+}
+
+// ════════════════════════════════════════════
+// MY ORDERS / CANCEL / RETURN
+// ════════════════════════════════════════════
+let myOrders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+let actionOrderId = null;
+
+function openOrdersPage() {
+  document.getElementById('ordersPage').classList.add('open');
+  renderOrdersList();
+}
+
+function closeOrdersPage() {
+  document.getElementById('ordersPage').classList.remove('open');
+}
+
+function renderOrdersList() {
+  const el = document.getElementById('ordersList');
+  if (!myOrders.length) {
+    el.innerHTML = '<div class="no-orders"><span class="ei">📦</span>You have no orders yet.<br><br><small>Place an order first to see it here!</small></div>';
+    return;
+  }
+
+  el.innerHTML = myOrders.slice().reverse().map(order => {
+    const date = new Date(order.placedAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    const statusClass = {
+      'Pending':   'status-pending',
+      'Confirmed': 'status-confirmed',
+      'Cancelled': 'status-cancelled',
+      'Return Requested': 'status-returned',
+    }[order.status] || 'status-pending';
+
+    const itemsHTML = order.items.map(item => `
+      <div class="order-item-row">
+        <div class="order-item-img">${item.image ? `<img src="${item.image}">` : '📦'}</div>
+        <div>
+          <div class="order-item-name">${item.name}</div>
+          <div class="order-item-qty">Qty: ${item.qty}</div>
+        </div>
+        <div class="order-item-price">${item.currency}${(item.price * item.qty).toFixed(2)}</div>
+      </div>`).join('');
+
+    const canCancel = order.status === 'Pending';
+    const canReturn = order.status === 'Confirmed';
+
+    return `
+      <div class="order-card">
+        <div class="order-card-head">
+          <div>
+            <div class="order-id">Order #${order.id.toString().slice(-6)}</div>
+            <div class="order-date">${date}</div>
+            <div style="margin-top:4px;font-size:0.82rem;color:#555;">
+              ${order.buyer.name} · ${order.buyer.address}
+            </div>
+          </div>
+          <span class="order-status ${statusClass}">${order.status}</span>
+        </div>
+        <div class="order-items-list">${itemsHTML}</div>
+        <div class="order-total-row">
+          <span>Total</span>
+          <span class="order-total-amt">${order.items[0]?.currency||'₹'}${order.total.toFixed(2)}</span>
+        </div>
+        <div class="order-actions">
+          ${canCancel ? `<button class="order-action-btn btn-cancel" onclick="openCancelModal('${order.id}')">❌ Cancel Order</button>` : ''}
+          ${canReturn ? `<button class="order-action-btn btn-return" onclick="openReturnModal('${order.id}')">🔄 Return Order</button>` : ''}
+          ${!canCancel && !canReturn ? `<button class="order-action-btn btn-disabled" disabled>No actions available</button>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openCancelModal(orderId) {
+  actionOrderId = orderId;
+  document.getElementById('cancelReason').value = '';
+  document.getElementById('cancelNote').value = '';
+  openModal('cancelModal');
+}
+
+function openReturnModal(orderId) {
+  actionOrderId = orderId;
+  document.getElementById('returnReason').value = '';
+  document.getElementById('returnNote').value = '';
+  openModal('returnModal');
+}
+
+async function confirmCancel() {
+  const reason = document.getElementById('cancelReason').value;
+  if (!reason) { showToast('⚠️ Please select a reason.'); return; }
+
+  const order = myOrders.find(o => o.id == actionOrderId);
+  if (order) {
+    order.status = 'Cancelled';
+    order.cancelReason = reason;
+    order.cancelNote = document.getElementById('cancelNote').value;
+    localStorage.setItem('my_orders', JSON.stringify(myOrders));
+
+    // Update in Firebase
+    try {
+      if (window._db) {
+        const { doc, updateDoc } = fs();
+        await updateDoc(doc(window._db, 'orders', order.firebaseId || actionOrderId), {
+          status: 'Cancelled', cancelReason: reason
+        });
+      }
+    } catch(e) { console.error(e); }
+
+    // 1. Notify ADMIN about cancellation
+    try {
+      await emailjs.send('service_4zkwi07', 'template_1cw499s', {
+        buyer_name:    order.buyer.name,
+        buyer_email:   order.buyer.email,
+        buyer_phone:   order.buyer.phone || 'N/A',
+        buyer_address: order.buyer.address,
+        order_items:   `<p style="color:#e44;font-weight:bold;">❌ ORDER CANCELLED</p><p>Reason: ${reason}</p>`,
+        order_total:   `CANCELLED — was ${order.items[0]?.currency||'₹'}${order.total.toFixed(2)}`,
+        order_type:    'CANCELLATION',
+        store_phone:   STORE_PHONE
+      });
+    } catch(e) { console.error(e); }
+    // 2. Notify CUSTOMER about cancellation
+    try {
+      await emailjs.send('service_4zkwi07', 'template_8cuoe9n', {
+        buyer_name:    order.buyer.name,
+        buyer_email:   order.buyer.email,
+        buyer_address: order.buyer.address,
+        order_items:   `<p style="color:#e44;">Your order has been <strong>cancelled</strong>.<br>Reason: ${reason}<br>If you have questions, contact us at ${STORE_PHONE}</p>`,
+        order_total:   `${order.items[0]?.currency||'₹'}${order.total.toFixed(2)}`,
+        store_name:    document.getElementById('headerName').textContent,
+        store_phone:   STORE_PHONE
+      });
+    } catch(e) { console.error(e); }
+  }
+
+  closeModal('cancelModal');
+  renderOrdersList();
+  showToast('✅ Order cancelled successfully.');
+}
+
+async function confirmReturn() {
+  const reason = document.getElementById('returnReason').value;
+  if (!reason) { showToast('⚠️ Please select a reason.'); return; }
+
+  const order = myOrders.find(o => o.id == actionOrderId);
+  if (order) {
+    order.status = 'Return Requested';
+    order.returnReason = reason;
+    order.returnNote = document.getElementById('returnNote').value;
+    localStorage.setItem('my_orders', JSON.stringify(myOrders));
+
+    // Update in Firebase
+    try {
+      if (window._db) {
+        const { doc, updateDoc } = fs();
+        await updateDoc(doc(window._db, 'orders', order.firebaseId || actionOrderId), {
+          status: 'Return Requested', returnReason: reason
+        });
+      }
+    } catch(e) { console.error(e); }
+
+    // 1. Notify ADMIN about return
+    try {
+      await emailjs.send('service_4zkwi07', 'template_1cw499s', {
+        buyer_name:    order.buyer.name,
+        buyer_email:   order.buyer.email,
+        buyer_phone:   order.buyer.phone || 'N/A',
+        buyer_address: order.buyer.address,
+        order_items:   `<p style="color:#446;font-weight:bold;">🔄 RETURN REQUESTED</p><p>Reason: ${reason}</p>`,
+        order_total:   `RETURN — ${order.items[0]?.currency||'₹'}${order.total.toFixed(2)}`,
+        order_type:    'RETURN REQUEST',
+        store_phone:   STORE_PHONE
+      });
+    } catch(e) { console.error(e); }
+    // 2. Notify CUSTOMER about return
+    try {
+      await emailjs.send('service_4zkwi07', 'template_8cuoe9n', {
+        buyer_name:    order.buyer.name,
+        buyer_email:   order.buyer.email,
+        buyer_address: order.buyer.address,
+        order_items:   `<p style="color:#446;">Your <strong>return request</strong> has been received.<br>Reason: ${reason}<br>We will contact you shortly at your registered number.<br>For queries, call us: <strong>${STORE_PHONE}</strong></p>`,
+        order_total:   `${order.items[0]?.currency||'₹'}${order.total.toFixed(2)}`,
+        store_name:    document.getElementById('headerName').textContent,
+        store_phone:   STORE_PHONE
+      });
+    } catch(e) { console.error(e); }
+  }
+
+  closeModal('returnModal');
+  renderOrdersList();
+  showToast('✅ Return request submitted!');
+}
 </script>
 </body>
 </html>

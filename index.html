@@ -1404,29 +1404,50 @@ function renderOffers() {
   const grid = document.getElementById('offersGrid');
   const section = document.getElementById('offersSection');
 
-  // Load from Firebase if available
   if (!offers.length) {
     grid.innerHTML = '<div class="no-offers">No special offers right now. Check back soon! 🎁</div>';
-    if (!isAdmin) section.style.display = 'none';
-    else section.style.display = 'block';
+    section.style.display = isAdmin ? 'block' : 'none';
     return;
   }
 
   section.style.display = 'block';
-  grid.innerHTML = offers.map(o => `
-    <div class="offer-card">
-      ${isAdmin ? `
-      <div style="position:absolute;top:10px;right:10px;display:flex;gap:6px;z-index:10;">
-        <button style="background:rgba(200,169,110,0.9);border:none;color:#111;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:0.78rem;font-weight:700;" onclick="openOfferModal('${o.id}')">✏️ Edit</button>
-        <button style="background:rgba(220,50,50,0.9);border:none;color:#fff;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:0.78rem;font-weight:700;" onclick="deleteOffer('${o.id}')">🗑 Delete</button>
-      </div>` : ''}
+
+  // Build each card using DOM (avoids template literal quoting issues)
+  grid.innerHTML = '';
+  offers.forEach(o => {
+    const card = document.createElement('div');
+    card.className = 'offer-card';
+    card.style.position = 'relative';
+
+    // Admin buttons — always rendered when isAdmin is true
+    if (isAdmin) {
+      const btnWrap = document.createElement('div');
+      btnWrap.style.cssText = 'position:absolute;top:10px;right:10px;display:flex;gap:8px;z-index:99;';
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = '✏️ Edit';
+      editBtn.style.cssText = 'background:#c8a96e;border:none;color:#111;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;font-weight:700;';
+      editBtn.onclick = () => openOfferModal(o.id);
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = '🗑 Delete';
+      delBtn.style.cssText = 'background:#e33;border:none;color:#fff;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;font-weight:700;';
+      delBtn.onclick = () => deleteOffer(o.id);
+
+      btnWrap.appendChild(editBtn);
+      btnWrap.appendChild(delBtn);
+      card.appendChild(btnWrap);
+    }
+
+    card.innerHTML += `
       <span class="offer-badge">Special Offer</span>
       <div class="offer-title">${o.title}</div>
       ${o.desc ? `<div class="offer-desc">${o.desc}</div>` : ''}
       <div class="offer-discount">${o.discount}</div>
       ${o.valid ? `<div class="offer-valid">Valid until: ${o.valid}</div>` : ''}
-    </div>
-  `).join('');
+    `;
+    grid.appendChild(card);
+  });
 }
 
 // Load offers from Firebase

@@ -285,6 +285,7 @@
 
   .admin-card-btns { position:absolute; top:8px; right:8px; display:none; gap:6px; }
   .admin-mode .admin-card-btns { display:flex; }
+  body.is-admin .admin-card-btns { display:flex; }
   .card-btn {
     background:rgba(0,0,0,0.72); border:none; color:#fff;
     border-radius:6px; padding:5px 9px; cursor:pointer; font-size:0.75rem; transition:background 0.2s;
@@ -400,6 +401,7 @@
 
   .admin-offer-btns { position:absolute; top:10px; right:10px; display:none; gap:6px; }
   .admin-mode .admin-offer-btns { display:flex; }
+  body.is-admin .admin-offer-btns { display:flex; }
 
   .no-offers { text-align:center; padding:40px; color:#aaa; grid-column:1/-1; font-size:0.95rem; }
 
@@ -947,7 +949,9 @@ function tryLogin() {
     document.getElementById('adminBtn').classList.add('on');
     document.getElementById('adminBtn').textContent = '⚙ Admin ✓';
     document.getElementById('mainSection').classList.add('admin-mode');
+    document.body.classList.add('is-admin');
     renderProducts();
+    renderOffers();
     showToast('✅ Welcome back, Admin!');
   } else {
     document.getElementById('loginErr').style.display = 'block';
@@ -962,7 +966,9 @@ function adminLogout() {
   document.getElementById('adminBtn').classList.remove('on');
   document.getElementById('adminBtn').textContent = '⚙ Admin';
   document.getElementById('mainSection').classList.remove('admin-mode');
+  document.body.classList.remove('is-admin');
   renderProducts();
+  renderOffers();
   showToast('👋 Logged out.');
 }
 

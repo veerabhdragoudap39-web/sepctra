@@ -1415,10 +1415,11 @@ function renderOffers() {
   section.style.display = 'block';
   grid.innerHTML = offers.map(o => `
     <div class="offer-card">
-      <div class="admin-offer-btns">
-        <button class="card-btn" onclick="openOfferModal('${o.id}')">✏️</button>
-        <button class="card-btn del" onclick="deleteOffer('${o.id}')">🗑</button>
-      </div>
+      ${isAdmin ? `
+      <div style="position:absolute;top:10px;right:10px;display:flex;gap:6px;z-index:10;">
+        <button style="background:rgba(200,169,110,0.9);border:none;color:#111;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:0.78rem;font-weight:700;" onclick="openOfferModal('${o.id}')">✏️ Edit</button>
+        <button style="background:rgba(220,50,50,0.9);border:none;color:#fff;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:0.78rem;font-weight:700;" onclick="deleteOffer('${o.id}')">🗑 Delete</button>
+      </div>` : ''}
       <span class="offer-badge">Special Offer</span>
       <div class="offer-title">${o.title}</div>
       ${o.desc ? `<div class="offer-desc">${o.desc}</div>` : ''}

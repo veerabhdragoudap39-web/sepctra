@@ -1042,6 +1042,20 @@ async function placeOrder() {
     }
   } catch(e) { console.error(e); }
 
+  // ── Build HTML product list with images ──
+  const itemsHTML = cart.map(c => {
+    const imgTag = c.image
+      ? `<img src="${c.image}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:10px;">`
+      : '📦';
+    return `<div style="display:flex;align-items:center;margin-bottom:12px;padding:10px;background:#f9f9f9;border-radius:8px;">
+      ${imgTag}
+      <div>
+        <strong>${c.name}</strong><br>
+        Qty: ${c.qty} &nbsp;|&nbsp; Price: ${c.currency}${(c.price * c.qty).toFixed(2)}
+      </div>
+    </div>`;
+  }).join('');
+
   // ── Send Email Notification via EmailJS ──
   try {
     await emailjs.send('service_4zkwi07', 'template_1cw499s', {
@@ -1049,7 +1063,7 @@ async function placeOrder() {
       buyer_email:   email,
       buyer_phone:   phone || 'Not provided',
       buyer_address: addr,
-      order_items:   itemsList,
+      order_items:   itemsHTML,
       order_total:   currency + total.toFixed(2)
     });
     console.log('Order notification email sent!');

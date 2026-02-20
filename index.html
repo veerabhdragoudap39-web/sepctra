@@ -1411,41 +1411,46 @@ function renderOffers() {
   }
 
   section.style.display = 'block';
-
-  // Build each card using DOM (avoids template literal quoting issues)
   grid.innerHTML = '';
+
   offers.forEach(o => {
+    // Create wrapper
     const card = document.createElement('div');
     card.className = 'offer-card';
-    card.style.position = 'relative';
+    card.style.cssText = 'position:relative;';
 
-    // Admin buttons — always rendered when isAdmin is true
+    // Build inner HTML first
+    const inner = document.createElement('div');
+    inner.innerHTML = `
+      <span class="offer-badge">Special Offer</span>
+      <div class="offer-title">${o.title}</div>
+      ${o.desc ? '<div class="offer-desc">'+o.desc+'</div>' : ''}
+      <div class="offer-discount">${o.discount}</div>
+      ${o.valid ? '<div class="offer-valid">Valid until: '+o.valid+'</div>' : ''}
+    `;
+    // Move children into card
+    while(inner.firstChild) card.appendChild(inner.firstChild);
+
+    // Add admin buttons AFTER inner content
     if (isAdmin) {
       const btnWrap = document.createElement('div');
-      btnWrap.style.cssText = 'position:absolute;top:10px;right:10px;display:flex;gap:8px;z-index:99;';
+      btnWrap.style.cssText = 'position:absolute;top:10px;right:10px;display:flex;gap:8px;z-index:999;';
 
       const editBtn = document.createElement('button');
-      editBtn.textContent = '✏️ Edit';
-      editBtn.style.cssText = 'background:#c8a96e;border:none;color:#111;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;font-weight:700;';
-      editBtn.onclick = () => openOfferModal(o.id);
+      editBtn.innerHTML = '✏️ Edit';
+      editBtn.style.cssText = 'background:#c8a96e;border:none;color:#111;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+      editBtn.addEventListener('click', function(e){ e.stopPropagation(); openOfferModal(o.id); });
 
       const delBtn = document.createElement('button');
-      delBtn.textContent = '🗑 Delete';
-      delBtn.style.cssText = 'background:#e33;border:none;color:#fff;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;font-weight:700;';
-      delBtn.onclick = () => deleteOffer(o.id);
+      delBtn.innerHTML = '🗑 Del';
+      delBtn.style.cssText = 'background:#e33;border:none;color:#fff;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+      delBtn.addEventListener('click', function(e){ e.stopPropagation(); deleteOffer(o.id); });
 
       btnWrap.appendChild(editBtn);
       btnWrap.appendChild(delBtn);
       card.appendChild(btnWrap);
     }
 
-    card.innerHTML += `
-      <span class="offer-badge">Special Offer</span>
-      <div class="offer-title">${o.title}</div>
-      ${o.desc ? `<div class="offer-desc">${o.desc}</div>` : ''}
-      <div class="offer-discount">${o.discount}</div>
-      ${o.valid ? `<div class="offer-valid">Valid until: ${o.valid}</div>` : ''}
-    `;
     grid.appendChild(card);
   });
 }

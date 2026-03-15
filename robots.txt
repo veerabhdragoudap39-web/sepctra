@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://veerabhdragoudap39-web.github.io/sepctra/sitemap.xml

@@ -193,9 +193,11 @@
     background:none; border:1.5px solid #333; color:#888;
     border-radius:8px; padding:8px 14px; cursor:pointer;
     font-family:'DM Sans',sans-serif; font-size:0.82rem; transition:all 0.2s;
+    display:none; /* Hidden from all visitors by default */
   }
   .admin-btn:hover { border-color:var(--accent); color:var(--accent); }
   .admin-btn.on { border-color:var(--accent); color:var(--accent); background:rgba(200,169,110,0.08); }
+  .admin-btn.visible { display:inline-flex; }
 
   /* ── ADMIN TOOLBAR ── */
   .admin-bar {
@@ -1086,6 +1088,7 @@ function tryLogin() {
     closeModal('loginModal');
     document.getElementById('adminBar').classList.add('show');
     document.getElementById('adminBtn').classList.add('on');
+    document.getElementById('adminBtn').classList.add('visible');
     document.getElementById('adminBtn').textContent = '⚙ Admin ✓';
     document.getElementById('mainSection').classList.add('admin-mode');
     document.body.classList.add('is-admin');
@@ -1106,6 +1109,7 @@ function adminLogout() {
   document.getElementById('adminBar').classList.remove('show');
   document.getElementById('adminBtn').classList.remove('on');
   document.getElementById('adminBtn').textContent = '⚙ Admin';
+  // Hide again after logout so customers won't see it
   document.getElementById('mainSection').classList.remove('admin-mode');
   document.body.classList.remove('is-admin');
   document.getElementById('adminOrderTools').style.display = 'none';
@@ -1468,6 +1472,23 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
 // ════════════════════════════════════════════
 // UI HELPERS
 // ════════════════════════════════════════════
+// ── SECRET ADMIN REVEAL: Press 'A' key 3 times quickly ──
+let adminKeyCount = 0;
+let adminKeyTimer = null;
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'a' || e.key === 'A') {
+    adminKeyCount++;
+    clearTimeout(adminKeyTimer);
+    adminKeyTimer = setTimeout(() => { adminKeyCount = 0; }, 1000);
+    if (adminKeyCount >= 3) {
+      adminKeyCount = 0;
+      const btn = document.getElementById('adminBtn');
+      btn.classList.add('visible');
+      showToast('🔐 Admin access enabled');
+    }
+  }
+});
+
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');

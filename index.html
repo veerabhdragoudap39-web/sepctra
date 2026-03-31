@@ -411,6 +411,108 @@
   .toast.show { transform:translateY(0); opacity:1; }
 
   footer { background:var(--dark); color:#555; text-align:center; padding:24px; font-size:0.82rem; border-top:1px solid #222; }
+
+  /* ── PRODUCT DETAIL PAGE ── */
+  .product-detail-page {
+    display:none; position:fixed; inset:0;
+    background:var(--bg); z-index:700;
+    overflow-y:auto;
+  }
+  .product-detail-page.open { display:block; }
+
+  .pd-header {
+    background:var(--dark); padding:16px 32px;
+    display:flex; align-items:center; gap:16px;
+    border-bottom:2px solid var(--accent); position:sticky; top:0; z-index:10;
+  }
+  .pd-back {
+    background:none; border:1.5px solid #444; color:#ccc;
+    border-radius:8px; padding:8px 16px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-size:0.85rem; transition:all 0.2s;
+  }
+  .pd-back:hover { border-color:var(--accent); color:var(--accent); }
+  .pd-title { font-family:'Playfair Display',serif; color:var(--accent); font-size:1.3rem; font-weight:700; }
+
+  .pd-body { display:grid; grid-template-columns:1fr 1fr; gap:48px; padding:48px; max-width:1100px; margin:0 auto; }
+  @media(max-width:768px) { .pd-body { grid-template-columns:1fr; padding:24px; gap:24px; } }
+
+  /* Image gallery */
+  .pd-gallery { display:flex; flex-direction:column; gap:12px; }
+  .pd-main-img {
+    width:100%; aspect-ratio:1; border-radius:18px; overflow:hidden;
+    background:linear-gradient(135deg,#f5f0e8,#e8e0d0);
+    display:flex; align-items:center; justify-content:center;
+    font-size:5rem; border:1px solid #eee;
+  }
+  .pd-main-img img { width:100%; height:100%; object-fit:cover; }
+
+  .pd-thumbs { display:flex; gap:10px; flex-wrap:wrap; }
+  .pd-thumb {
+    width:70px; height:70px; border-radius:10px; overflow:hidden;
+    border:2px solid #eee; cursor:pointer; transition:border 0.2s;
+    background:#f0ebe0; display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+    flex-shrink:0;
+  }
+  .pd-thumb:hover { border-color:var(--accent); }
+  .pd-thumb.active { border-color:var(--accent); border-width:2.5px; }
+  .pd-thumb img { width:100%; height:100%; object-fit:cover; }
+
+  /* Product info */
+  .pd-info { display:flex; flex-direction:column; gap:16px; }
+  .pd-name { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; line-height:1.2; }
+  .pd-price { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--accent); }
+  .pd-desc-full { font-size:0.95rem; color:#555; line-height:1.8; }
+
+  /* Size selector */
+  .pd-size-section { border-top:1px solid #eee; padding-top:16px; }
+  .pd-size-label { font-weight:700; font-size:0.88rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+  .pd-sizes { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .size-btn {
+    padding:8px 16px; border:1.5px solid #ddd; border-radius:8px;
+    background:#fff; cursor:pointer; font-family:'DM Sans',sans-serif;
+    font-size:0.88rem; font-weight:600; transition:all 0.2s;
+  }
+  .size-btn:hover { border-color:var(--accent); }
+  .size-btn.selected, .size-btn.active { background:var(--dark); color:#fff; border-color:var(--dark); }
+  .size-btn.unavailable { background:#f5f5f5; color:#ccc; border-color:#eee; cursor:not-allowed; text-decoration:line-through; }
+
+  /* Size chart */
+  .size-chart-toggle {
+    background:none; border:none; color:var(--accent); font-family:'DM Sans',sans-serif;
+    font-size:0.85rem; cursor:pointer; text-decoration:underline; padding:0; margin-bottom:12px;
+  }
+  .size-chart-table {
+    display:table; width:100%; border-collapse:collapse;
+    font-size:0.82rem;
+    border-radius:10px; overflow:hidden;
+  }
+  .size-chart-table th {
+    background:var(--dark); color:var(--accent);
+    padding:8px 12px; text-align:center; font-weight:600;
+  }
+  .size-chart-table td {
+    padding:8px 12px; text-align:center;
+    border-bottom:1px solid #f0f0f0; background:#fff;
+  }
+  .size-chart-table tr:last-child td { border-bottom:none; }
+  .size-chart-table tr:nth-child(even) td { background:#fafafa; }
+
+  /* Add to cart button on detail page */
+  .pd-atc {
+    width:100%; padding:16px; background:var(--dark); color:#fff;
+    border:none; border-radius:12px; font-family:'DM Sans',sans-serif;
+    font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s;
+    letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .pd-atc:hover { background:var(--accent); color:#111; }
+
+  .pd-details-section { border-top:1px solid #eee; padding-top:16px; }
+  .pd-details-title { font-weight:700; font-size:0.88rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+  .pd-details-text { font-size:0.88rem; color:#666; line-height:1.8; }
+
+  /* Make product cards clickable */
+  .product-card { cursor:pointer; }
+
   /* ── ORDER TRACKING ── */
   .tracking-steps {
     display:flex; flex-direction:column; gap:0; margin:16px 0;
@@ -660,12 +762,13 @@
 
 <!-- ADD / EDIT PRODUCT MODAL -->
 <div class="modal-overlay" id="productModal">
-  <div class="modal" style="max-width:480px;">
+  <div class="modal" style="max-width:540px;">
     <button class="modal-close-btn" onclick="closeProductModal()">×</button>
     <h2 id="prodModalTitle">Add Product</h2>
     <p class="sub">Fill in the product details.</p>
     <input type="text" id="pName" placeholder="Product name *">
-    <textarea id="pDesc" placeholder="Short description (optional)"></textarea>
+    <textarea id="pDesc" placeholder="Short description (shown on card)"></textarea>
+    <textarea id="pDescFull" placeholder="Full detailed description (shown on product page — materials, features, care instructions etc.)" style="min-height:80px;"></textarea>
     <div class="field-row">
       <input type="number" id="pPrice" placeholder="Price *" min="0" step="0.01">
       <select id="pCurrency">
@@ -676,14 +779,34 @@
         <option value="¥">¥ JPY</option>
       </select>
     </div>
+    <select id="pCategory" style="width:100%;padding:11px 13px;border:1.5px solid #ddd;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;margin-bottom:12px;background:#fafafa;">
+      <option value="">Category (optional)</option>
+      <option value="clothing">👕 Clothing / Dress</option>
+      <option value="footwear">👟 Footwear / Shoes</option>
+      <option value="accessories">💍 Accessories</option>
+      <option value="electronics">📱 Electronics</option>
+      <option value="other">📦 Other</option>
+    </select>
+    <div id="pSizesWrap" style="display:none;margin-bottom:12px;">
+      <label style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:#888;display:block;margin-bottom:6px;">Available Sizes (check all that apply)</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="pSizeCheckboxes"></div>
+    </div>
+    <label style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:#888;display:block;margin-bottom:6px;">Main Product Image *</label>
     <label class="img-upload-area" for="pImg">
       <span class="u-icon">📷</span>
-      <p>Click to upload product image</p>
+      <p>Click to upload main product image</p>
     </label>
     <input type="file" accept="image/*" id="pImg" style="display:none" onchange="handleProdImg(event)">
     <div class="img-upload-preview" id="pImgPreview">
       <img id="pImgThumb" src="">
       <button onclick="clearProdImg()">✕ Remove</button>
+    </div>
+    <label style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:#888;display:block;margin-bottom:6px;">Extra Images (up to 4 more)</label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="extraImgSlots">
+      <label style="width:70px;height:70px;border:2px dashed #ddd;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.5rem;color:#ccc;transition:all 0.2s;" for="pExtraImg1" onmouseover="this.style.borderColor='#c8a96e'" onmouseout="this.style.borderColor='#ddd'">+<input type="file" accept="image/*" id="pExtraImg1" style="display:none" onchange="handleExtraImg(event,0)"></label>
+      <label style="width:70px;height:70px;border:2px dashed #ddd;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.5rem;color:#ccc;transition:all 0.2s;" for="pExtraImg2" onmouseover="this.style.borderColor='#c8a96e'" onmouseout="this.style.borderColor='#ddd'">+<input type="file" accept="image/*" id="pExtraImg2" style="display:none" onchange="handleExtraImg(event,1)"></label>
+      <label style="width:70px;height:70px;border:2px dashed #ddd;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.5rem;color:#ccc;transition:all 0.2s;" for="pExtraImg3" onmouseover="this.style.borderColor='#c8a96e'" onmouseout="this.style.borderColor='#ddd'">+<input type="file" accept="image/*" id="pExtraImg3" style="display:none" onchange="handleExtraImg(event,2)"></label>
+      <label style="width:70px;height:70px;border:2px dashed #ddd;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.5rem;color:#ccc;transition:all 0.2s;" for="pExtraImg4" onmouseover="this.style.borderColor='#c8a96e'" onmouseout="this.style.borderColor='#ddd'">+<input type="file" accept="image/*" id="pExtraImg4" style="display:none" onchange="handleExtraImg(event,3)"></label>
     </div>
     <button class="modal-btn modal-btn-primary" onclick="saveProduct()">Save Product</button>
   </div>
@@ -900,6 +1023,121 @@
     </div>
   </div>
   <div id="ordersList"></div>
+</div>
+
+<!-- PRODUCT DETAIL PAGE -->
+<div class="product-detail-page" id="productDetailPage">
+  <!-- Header -->
+  <div class="pd-header">
+    <button class="pd-back" onclick="closeProductDetail()">← Back to Store</button>
+    <div class="pd-title" id="pdBreadcrumb">Product Details</div>
+  </div>
+
+  <div class="pd-body">
+    <!-- LEFT: Image Gallery -->
+    <div class="pd-gallery">
+      <div class="pd-main-img" id="pdMainImg"><span style="font-size:4rem;">📦</span></div>
+      <div class="pd-thumbs" id="pdThumbs"></div>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="pd-info">
+
+      <!-- Category badge -->
+      <div id="pdCategoryBadge" style="display:none;">
+        <span id="pdCategoryText" style="display:inline-block;padding:4px 12px;background:#f0ebe0;border-radius:20px;font-size:0.75rem;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.08em;"></span>
+      </div>
+
+      <!-- Name & Price -->
+      <div>
+        <div class="pd-name" id="pdName"></div>
+        <div class="pd-price" id="pdPrice"></div>
+      </div>
+
+      <!-- Star Rating Summary -->
+      <div id="pdRatingSummary" style="display:flex;align-items:center;gap:8px;">
+        <span id="pdStarDisplay" style="color:#f5a623;font-size:1.1rem;"></span>
+        <span id="pdRatingCount" style="font-size:0.82rem;color:#aaa;"></span>
+      </div>
+
+      <!-- Short Description -->
+      <div class="pd-desc-full" id="pdDesc" style="border-top:1px solid #f0f0f0;padding-top:14px;"></div>
+
+      <!-- SIZE SECTION -->
+      <div class="pd-size-section" id="pdSizeSection" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div class="pd-size-label">Select Size <span id="pdSelectedSizeDisplay" style="color:var(--accent);font-size:0.85rem;font-weight:700;"></span></div>
+          <button class="size-chart-toggle" onclick="toggleSizeChart()">📏 Size Chart</button>
+        </div>
+        <div class="pd-sizes" id="pdSizes"></div>
+
+        <!-- SIZE CHART TABLE -->
+        <div id="pdSizeChartWrap" style="display:none;margin-top:14px;border-radius:12px;overflow:hidden;border:1px solid #eee;">
+          <div style="background:var(--dark);color:var(--accent);padding:10px 16px;font-weight:700;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center;">
+            📏 Size Chart
+            <button onclick="toggleSizeChart()" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1rem;">✕</button>
+          </div>
+          <table class="size-chart-table" id="pdSizeChart" style="display:table;width:100%;">
+            <thead id="pdSizeChartHead"></thead>
+            <tbody id="pdSizeChartBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- QUANTITY -->
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Quantity</div>
+        <div style="display:flex;align-items:center;gap:0;border:1.5px solid #eee;border-radius:8px;overflow:hidden;">
+          <button onclick="changeDetailQty(-1)" style="width:36px;height:36px;border:none;background:#fafafa;cursor:pointer;font-size:1.2rem;font-weight:600;">−</button>
+          <span id="pdQtyDisplay" style="width:40px;text-align:center;font-weight:700;font-size:1rem;">1</span>
+          <button onclick="changeDetailQty(1)" style="width:36px;height:36px;border:none;background:#fafafa;cursor:pointer;font-size:1.2rem;font-weight:600;">+</button>
+        </div>
+      </div>
+
+      <!-- ADD TO CART -->
+      <button class="pd-atc" id="pdAtcBtn" onclick="addToCartFromDetail()">🛒 Add to Cart</button>
+
+      <!-- DELIVERY INFO -->
+      <div style="background:#f8f8f8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#555;">
+          <span>🚚</span><span><strong>Free Delivery</strong> on orders above ₹499</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#555;">
+          <span>🔄</span><span><strong>Easy Returns</strong> within 7 days</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:#555;">
+          <span>📞</span><span>Need help? Call us: <strong id="pdStorePhone">9611265549</strong></span>
+        </div>
+      </div>
+
+      <!-- FULL DESCRIPTION / DETAILS -->
+      <div class="pd-details-section" id="pdDetailsSection" style="display:none;">
+        <div class="pd-details-title">📋 Product Details</div>
+        <div class="pd-details-text" id="pdDetailsText"></div>
+      </div>
+
+      <!-- PRODUCT HIGHLIGHTS -->
+      <div class="pd-details-section">
+        <div class="pd-details-title">✨ Why Choose This?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;" id="pdHighlights">
+          <div style="display:flex;gap:10px;font-size:0.85rem;color:#555;"><span>✅</span><span>100% authentic product</span></div>
+          <div style="display:flex;gap:10px;font-size:0.85rem;color:#555;"><span>✅</span><span>Quality checked before shipping</span></div>
+          <div style="display:flex;gap:10px;font-size:0.85rem;color:#555;"><span>✅</span><span>Secure packaging</span></div>
+          <div style="display:flex;gap:10px;font-size:0.85rem;color:#555;"><span>✅</span><span>Fast delivery to your doorstep</span></div>
+        </div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="pd-details-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div class="pd-details-title" style="margin-bottom:0;">⭐ Customer Reviews</div>
+          <button onclick="openModal('reviewModal')" style="padding:7px 14px;background:none;border:1.5px solid var(--accent);color:var(--accent);border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;">✍️ Write Review</button>
+        </div>
+        <div id="pdReviews"></div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <!-- WRITE REVIEW MODAL -->
@@ -1186,9 +1424,15 @@ function openProductModal(id = null) {
   editingProductId = id;
   const p = id ? products.find(x => x.id === id) : null;
   document.getElementById('prodModalTitle').textContent = p ? 'Edit Product' : 'Add Product';
-  document.getElementById('pName').value    = p ? p.name    : '';
-  document.getElementById('pDesc').value    = p ? (p.desc||'') : '';
-  document.getElementById('pPrice').value   = p ? p.price   : '';
+  document.getElementById('pName').value     = p ? p.name       : '';
+  document.getElementById('pDesc').value     = p ? (p.desc||'')  : '';
+  document.getElementById('pDescFull').value = p ? (p.descFull||'') : '';
+  document.getElementById('pPrice').value    = p ? p.price      : '';
+  document.getElementById('pCategory').value = p ? (p.category||'') : '';
+  // Trigger category change to show sizes
+  document.getElementById('pCategory').dispatchEvent(new Event('change'));
+  // Reset extra images
+  extraImages = [null,null,null,null];
   document.getElementById('pCurrency').value= p ? p.currency: '$';
   currentProdImg = p ? (p.image || null) : null;
   if (currentProdImg) {
@@ -1235,6 +1479,10 @@ async function saveProduct() {
   const data = {
     name, price,
     desc: document.getElementById('pDesc').value.trim(),
+    descFull: document.getElementById('pDescFull').value.trim(),
+    category: document.getElementById('pCategory').value,
+    sizes: Array.from(document.querySelectorAll('#pSizeCheckboxes input:checked')).map(i=>i.value),
+    extraImages: extraImages.filter(Boolean),
     currency: document.getElementById('pCurrency').value,
     image: currentProdImg || null,
     updatedAt: Date.now()
@@ -1308,12 +1556,12 @@ function renderProducts() {
     const inCart = cart.some(c => c.id === p.id);
     const wished = wishlist.has(p.id);
     return `
-      <div class="product-card">
+      <div class="product-card" onclick="openProductDetail('${p.id}')">
         <div class="prod-img-wrap">
           ${p.image ? `<img src="${p.image}" alt="${p.name}">` : '<div class="no-img">📦</div>'}
           <div class="admin-card-btns">
-            <button class="card-btn" onclick="openProductModal('${p.id}')">✏️ Edit</button>
-            <button class="card-btn del" onclick="deleteProduct('${p.id}')">🗑 Del</button>
+            <button class="card-btn" onclick="event.stopPropagation();openProductModal('${p.id}')">✏️ Edit</button>
+            <button class="card-btn del" onclick="event.stopPropagation();deleteProduct('${p.id}')">🗑 Del</button>
           </div>
         </div>
         <div class="prod-info">
@@ -1321,10 +1569,10 @@ function renderProducts() {
           ${p.desc ? `<div class="prod-desc">${p.desc}</div>` : ''}
           <div class="prod-price">${p.currency}${parseFloat(p.price).toFixed(2)}</div>
           <div class="prod-footer">
-            <button class="atc-btn ${inCart?'in-cart':''}" onclick="addToCart('${p.id}')">
+            <button class="atc-btn ${inCart?'in-cart':''}" onclick="event.stopPropagation();addToCart('${p.id}')">
               ${inCart ? '✓ In Cart' : 'Add to Cart'}
             </button>
-            <button class="wish-btn ${wished?'on':''}" onclick="toggleWish('${p.id}')" title="Wishlist">
+            <button class="wish-btn ${wished?'on':''}" onclick="event.stopPropagation();toggleWish('${p.id}')" title="Wishlist">
               ${wished ? '❤️' : '🤍'}
             </button>
           </div>
@@ -1378,6 +1626,7 @@ function renderCart() {
     <div class="cart-item">
       <div class="ci-img">${item.image ? `<img src="${item.image}">` : '📦'}</div>
       <div class="ci-info">
+        ${item.size ? `<div style="font-size:0.72rem;color:var(--accent);font-weight:700;margin-bottom:2px;">Size: ${item.size}</div>` : ''}
         <div class="ci-name">${item.name}</div>
         <div class="ci-price">${item.currency}${(item.price * item.qty).toFixed(2)}</div>
         <div class="ci-qty">
@@ -1539,6 +1788,252 @@ function showToast(msg) {
 
 function showSaving() { document.getElementById('savingIndicator').classList.add('show'); }
 function hideSaving()  { document.getElementById('savingIndicator').classList.remove('show'); }
+
+// ════════════════════════════════════════════
+// PRODUCT DETAIL PAGE
+// ════════════════════════════════════════════
+let currentDetailProduct = null;
+let selectedSize = null;
+const CLOTHING_SIZES = ['XS','S','M','L','XL','XXL','3XL'];
+const SHOE_SIZES = ['5','6','7','8','9','10','11','12'];
+
+const SIZE_CHART = {
+  clothing: {
+    headers: ['Size','Chest (cm)','Waist (cm)','Hips (cm)','Length (cm)'],
+    rows: [
+      ['XS','80-84','60-64','84-88','68'],
+      ['S','84-88','64-68','88-92','70'],
+      ['M','88-92','68-72','92-96','72'],
+      ['L','92-96','72-76','96-100','74'],
+      ['XL','96-100','76-80','100-104','76'],
+      ['XXL','100-104','80-84','104-108','78'],
+      ['3XL','104-110','84-90','108-114','80'],
+    ]
+  },
+  footwear: {
+    headers: ['UK Size','EU Size','US Size','Foot Length (cm)'],
+    rows: [
+      ['5','38','6','23.5'],
+      ['6','39','7','24.1'],
+      ['7','40','8','24.8'],
+      ['8','41','9','25.4'],
+      ['9','42','10','26.0'],
+      ['10','43','11','26.7'],
+      ['11','44','12','27.3'],
+      ['12','45','13','27.9'],
+    ]
+  }
+};
+
+function openProductDetail(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  currentDetailProduct = p;
+  selectedSize = null;
+  window._detailQty = 1;
+
+  // Breadcrumb & name & price
+  document.getElementById('pdBreadcrumb').textContent = p.name;
+  document.getElementById('pdName').textContent = p.name;
+  document.getElementById('pdPrice').textContent = (p.currency||'₹') + parseFloat(p.price).toFixed(2);
+  document.getElementById('pdQtyDisplay').textContent = '1';
+  document.getElementById('pdStorePhone').textContent = STORE_PHONE;
+
+  // Category badge
+  const catMap = { clothing:'👕 Clothing', footwear:'👟 Footwear', accessories:'💍 Accessories', electronics:'📱 Electronics', other:'📦 Other' };
+  const catBadge = document.getElementById('pdCategoryBadge');
+  if (p.category && catMap[p.category]) {
+    document.getElementById('pdCategoryText').textContent = catMap[p.category];
+    catBadge.style.display = 'block';
+  } else {
+    catBadge.style.display = 'none';
+  }
+
+  // Short description
+  const descEl = document.getElementById('pdDesc');
+  descEl.textContent = p.desc || '';
+  descEl.style.display = p.desc ? 'block' : 'none';
+
+  // Full description
+  const detailsSection = document.getElementById('pdDetailsSection');
+  if (p.descFull) {
+    document.getElementById('pdDetailsText').textContent = p.descFull;
+    detailsSection.style.display = 'block';
+  } else {
+    detailsSection.style.display = 'none';
+  }
+
+  // Gallery - main image
+  const mainImg = document.getElementById('pdMainImg');
+  if (p.image) {
+    mainImg.innerHTML = '<img src="'+p.image+'" alt="'+p.name+'" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">';
+  } else {
+    mainImg.innerHTML = '<span style="font-size:4rem;">📦</span>';
+  }
+
+  // Thumbnails
+  const thumbsEl = document.getElementById('pdThumbs');
+  const allImgs = [p.image, ...(p.extraImages||[])].filter(Boolean);
+  if (allImgs.length > 1) {
+    thumbsEl.innerHTML = allImgs.map((img, i) =>
+      '<div class="pd-thumb '+(i===0?'active':'')+'" onclick="switchDetailImg(''+img+'', this)">'+
+      '<img src="'+img+'" alt="view '+(i+1)+'"></div>'
+    ).join('');
+    thumbsEl.style.display = 'flex';
+  } else {
+    thumbsEl.innerHTML = '';
+    thumbsEl.style.display = 'none';
+  }
+
+  // Rating summary from reviews
+  const prodReviews = reviews.filter(r => r.product.toLowerCase() === p.name.toLowerCase());
+  const ratingEl = document.getElementById('pdRatingSummary');
+  if (prodReviews.length) {
+    const avg = prodReviews.reduce((s,r) => s+r.rating, 0) / prodReviews.length;
+    const fullStars = Math.round(avg);
+    document.getElementById('pdStarDisplay').textContent = '★'.repeat(fullStars) + '☆'.repeat(5-fullStars);
+    document.getElementById('pdRatingCount').textContent = avg.toFixed(1) + ' / 5  (' + prodReviews.length + ' review' + (prodReviews.length>1?'s':'') + ')';
+    ratingEl.style.display = 'flex';
+  } else {
+    ratingEl.style.display = 'none';
+  }
+
+  // Size section
+  const sizeSection = document.getElementById('pdSizeSection');
+  const sizesEl = document.getElementById('pdSizes');
+  const cat = p.category || '';
+  if (cat === 'clothing' || cat === 'footwear') {
+    sizeSection.style.display = 'block';
+    document.getElementById('pdSelectedSizeDisplay').textContent = '';
+    // Hide size chart initially
+    document.getElementById('pdSizeChartWrap').style.display = 'none';
+
+    const availSizes = p.sizes || (cat === 'clothing' ? CLOTHING_SIZES : SHOE_SIZES);
+    sizesEl.innerHTML = availSizes.map(s =>
+      '<button class="size-btn" onclick="selectSize(''+s+'', this)">'+s+'</button>'
+    ).join('');
+
+    // Build size chart
+    const chart = SIZE_CHART[cat];
+    document.getElementById('pdSizeChartHead').innerHTML =
+      '<tr>' + chart.headers.map(h => '<th>'+h+'</th>').join('') + '</tr>';
+    document.getElementById('pdSizeChartBody').innerHTML =
+      chart.rows.map(r => '<tr>' + r.map(c => '<td>'+c+'</td>').join('') + '</tr>').join('');
+  } else {
+    sizeSection.style.display = 'none';
+  }
+
+  // Reviews for this product
+  const pdReviewsEl = document.getElementById('pdReviews');
+  if (prodReviews.length) {
+    pdReviewsEl.innerHTML = prodReviews.map(r => {
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+      return '<div style="padding:14px 0;border-bottom:1px solid #f5f5f5;">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
+          '<div style="display:flex;align-items:center;gap:10px;">'+
+            '<div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#8a6a30);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111;font-size:0.9rem;">'+r.name.charAt(0).toUpperCase()+'</div>'+
+            '<div><div style="font-weight:600;font-size:0.88rem;">'+r.name+'</div><div style="color:#f5a623;font-size:0.82rem;">'+stars+'</div></div>'+
+          '</div>'+
+          '<div style="font-size:0.72rem;color:#bbb;">'+r.date+'</div>'+
+        '</div>'+
+        '<div style="font-size:0.85rem;color:#555;line-height:1.6;padding-left:44px;">'+r.text+'</div>'+
+      '</div>';
+    }).join('');
+  } else {
+    pdReviewsEl.innerHTML = '<div style="color:#aaa;font-size:0.85rem;padding:16px 0;text-align:center;">No reviews yet for this product.<br><small>Be the first to review! 😊</small></div>';
+  }
+
+  // Pre-fill review product name
+  document.getElementById('reviewProduct').value = p.name;
+
+  // Open page
+  document.getElementById('productDetailPage').classList.add('open');
+  window.scrollTo(0,0);
+}
+
+
+function closeProductDetail() {
+  document.getElementById('productDetailPage').classList.remove('open');
+  currentDetailProduct = null;
+  selectedSize = null;
+}
+
+function switchDetailImg(src, el) {
+  document.getElementById('pdMainImg').innerHTML = `<img src="${src}">`;
+  document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectSize(size, btn) {
+  selectedSize = size;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function toggleSizeChart() {
+  const wrap = document.getElementById('pdSizeChartWrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+function changeDetailQty(delta) {
+  window._detailQty = Math.max(1, (window._detailQty || 1) + delta);
+  document.getElementById('pdQtyDisplay').textContent = window._detailQty;
+}
+
+function addToCartFromDetail() {
+  if (!currentDetailProduct) return;
+  const p = currentDetailProduct;
+  const cat = p.category || '';
+  if ((cat === 'clothing' || cat === 'footwear') && !selectedSize) {
+    showToast('⚠️ Please select a size first!');
+    return;
+  }
+  const ex = cart.find(c => c.id === p.id && c.size === selectedSize);
+  if (ex) ex.qty++;
+  else cart.push({ ...p, qty:1, size: selectedSize||null });
+  renderCart(); renderProducts(); updateBadge();
+  showToast(`🛒 "${p.name}"${selectedSize ? ' ('+selectedSize+')' : ''} added to cart!`);
+}
+
+// ════════════════════════════════════════════
+// EXTRA PRODUCT IMAGES
+// ════════════════════════════════════════════
+let extraImages = [null, null, null, null];
+
+function handleExtraImg(e, idx) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    extraImages[idx] = ev.target.result;
+    const label = e.target.parentElement;
+    label.style.backgroundImage = `url(${ev.target.result})`;
+    label.style.backgroundSize = 'cover';
+    label.style.backgroundPosition = 'center';
+    label.style.borderColor = '#c8a96e';
+    label.innerHTML = `<span style="background:rgba(0,0,0,0.5);color:#fff;font-size:0.7rem;padding:2px 6px;border-radius:4px;">✓</span><input type="file" accept="image/*" id="pExtraImg${idx+1}" style="display:none" onchange="handleExtraImg(event,${idx})">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ════════════════════════════════════════════
+// SIZE CHECKBOXES IN ADMIN MODAL
+// ════════════════════════════════════════════
+document.getElementById('pCategory').addEventListener('change', function() {
+  const wrap = document.getElementById('pSizesWrap');
+  const checkboxes = document.getElementById('pSizeCheckboxes');
+  const cat = this.value;
+  if (cat === 'clothing' || cat === 'footwear') {
+    wrap.style.display = 'block';
+    const sizes = cat === 'clothing' ? CLOTHING_SIZES : SHOE_SIZES;
+    checkboxes.innerHTML = sizes.map(s => `
+      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:0.85rem;font-weight:600;transition:all 0.2s;" 
+             onmouseover="this.style.borderColor='#c8a96e'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'#c8a96e':'#ddd'">
+        <input type="checkbox" value="${s}" style="accent-color:#c8a96e;" onchange="this.parentElement.style.borderColor=this.checked?'#c8a96e':'#ddd'"> ${s}
+      </label>`).join('');
+  } else {
+    wrap.style.display = 'none';
+  }
+});
 
 // ════════════════════════════════════════════
 // OFFER IMAGE
@@ -2058,7 +2553,7 @@ async function confirmReturn() {
         buyer_name:    order.buyer.name,
         buyer_email:   order.buyer.email,
         buyer_address: order.buyer.address,
-        order_items:   `<p style="color:#446;">Your <strong>return request</strong> has been received.<br>Reason: ${reason}<br>We will contact you shortly at your registered number.<br>For queries, call us: <strong>${STORE_PHONE}</strong></p>`,
+        order_items:   `<p style="color:#446;">Your <strong>return request</strong> has been received.<br>Reason: ${reason}<br>We will contact you shortly at your registered number.<br>For queries, call us: <strong id="pdStorePhone">9611265549</strong></p>`,
         order_total:   `${order.items[0]?.currency||'₹'}${order.total.toFixed(2)}`,
         store_name:    document.getElementById('headerName').textContent,
         store_phone:   STORE_PHONE

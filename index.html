@@ -1222,7 +1222,7 @@ function loadLocalFallback() {
 // ════════════════════════════════════════════
 // LOAD FROM FIREBASE
 // ════════════════════════════════════════════
-async async function loadStoreFromDB() {
+async function loadStoreFromDB() {
   try {
     const { doc, getDoc, collection, onSnapshot } = fs();
 
@@ -1876,7 +1876,7 @@ function openProductDetail(id) {
   const allImgs = [p.image, ...(p.extraImages||[])].filter(Boolean);
   if (allImgs.length > 1) {
     thumbsEl.innerHTML = allImgs.map((img, i) =>
-      '<div class="pd-thumb '+(i===0?'active':'')+'" onclick="switchDetailImg(''+img+'', this)">'+
+      '<div class="pd-thumb '+(i===0?'active':'')+'" onclick="switchDetailImg(\'' + img + '\', this)">'+
       '<img src="'+img+'" alt="view '+(i+1)+'"></div>'
     ).join('');
     thumbsEl.style.display = 'flex';
@@ -1910,7 +1910,7 @@ function openProductDetail(id) {
 
     const availSizes = p.sizes || (cat === 'clothing' ? CLOTHING_SIZES : SHOE_SIZES);
     sizesEl.innerHTML = availSizes.map(s =>
-      '<button class="size-btn" onclick="selectSize(''+s+'', this)">'+s+'</button>'
+      '<button class="size-btn" onclick="selectSize(\'' + s + '\', this)">' + s + '</button>'
     ).join('');
 
     // Build size chart

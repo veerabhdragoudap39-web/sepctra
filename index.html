@@ -1258,6 +1258,22 @@ async function placeOrder() {
   myOrders.push(order);
   localStorage.setItem('my_orders', JSON.stringify(myOrders));
 
+  // ── WhatsApp notification to store owner ──
+  try {
+    let waMsg = '🛍️ *NEW ORDER RECEIVED!*%0A%0A';
+    waMsg += '👤 *Customer:* ' + name + '%0A';
+    waMsg += '📧 *Email:* ' + email + '%0A';
+    waMsg += '📞 *Phone:* ' + (phone || 'Not provided') + '%0A';
+    waMsg += '📍 *Address:* ' + addr + '%0A%0A';
+    waMsg += '🛒 *Items Ordered:*%0A';
+    cart.forEach(function(c) {
+      waMsg += '▪️ ' + c.name + ' x' + c.qty + ' — ' + c.currency + (c.price * c.qty).toFixed(2) + '%0A';
+    });
+    waMsg += '%0A💰 *Total: ' + currency + total.toFixed(2) + '*%0A%0A';
+    waMsg += '⚠️ _Please check your store admin panel for full order details._';
+    window.open('https://wa.me/919611265549?text=' + waMsg, '_blank');
+  } catch(e) { console.error('WhatsApp notify failed', e); }
+
   // Email to admin
   try {
     await emailjs.send('service_4zkwi07', 'template_1cw499s', {

@@ -122,9 +122,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .bb-outline:hover{border-color:var(--accent);color:var(--accent);}
 
 /* HERO */
-.store-hero{background:linear-gradient(135deg,#0d0d0d 0%,#1a1205 40%,#2d1f08 70%,#0d0d0d 100%);padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden;}
-.store-hero::before{content:'';position:absolute;top:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(200,169,110,0.18),transparent 65%);border-radius:50%;}
-.store-hero::after{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(200,169,110,0.1),transparent 65%);border-radius:50%;}
+.store-hero{background:#0a0a0a;padding:0;text-align:center;position:relative;overflow:hidden;height:520px;display:flex;align-items:center;justify-content:center;}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-content{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;}
+.hero-name{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:#fff;letter-spacing:0.05em;text-shadow:0 0 40px rgba(200,169,110,0.8),0 0 80px rgba(200,169,110,0.3);animation:heroFadeIn 1.2s ease forwards;}
+.hero-sub{color:rgba(200,169,110,0.75);font-size:1.05rem;letter-spacing:0.12em;text-transform:uppercase;animation:heroFadeIn 1.5s ease forwards;}
+.hero-logo{display:flex;align-items:center;justify-content:center;height:80px;animation:heroFadeIn 1s ease forwards;filter:drop-shadow(0 0 20px rgba(200,169,110,0.6));}
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 .hero-logo{display:flex;align-items:center;justify-content:center;height:90px;margin:0 auto 16px;position:relative;z-index:1;}
 .hero-name{font-family:'Playfair Display',serif;font-size:3.8rem;font-weight:900;color:var(--accent);position:relative;z-index:1;}
 .hero-sub{margin-top:12px;color:#aaa;font-size:1.05rem;position:relative;z-index:1;}
@@ -532,9 +536,12 @@ footer{background:var(--dark);color:#555;text-align:center;padding:24px;font-siz
 
 <!-- HERO -->
 <div class="store-hero">
-  <div class="hero-logo" id="heroLogo"><span style="font-size:5rem;">✦</span></div>
-  <div class="hero-name" id="heroName">Spectra</div>
-  <div class="hero-sub" id="heroSub">Discover our curated collection of premium products</div>
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-logo" id="heroLogo"><span style="font-size:4.5rem;filter:drop-shadow(0 0 20px rgba(200,169,110,0.8));">✦</span></div>
+    <div class="hero-name" id="heroName">Spectra</div>
+    <div class="hero-sub" id="heroSub">Discover our curated collection of premium products</div>
+  </div>
 </div>
 
 <!-- SPECIAL OFFERS SECTION -->
@@ -690,6 +697,228 @@ footer{background:var(--dark);color:#555;text-align:center;padding:24px;font-siz
     </svg>
   </div>
 </a>
+
+<!-- 3D HERO ANIMATION -->
+<script>
+(function() {
+  function initHero() {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const W = () => canvas.width;
+    const H = () => canvas.height;
+    const GOLD = 'rgba(200,169,110,';
+    const GOLD2 = 'rgba(255,210,130,';
+
+    // ── Floating 3D product icons ──
+    const ICONS = ['⌚','👟','🧥','👗','👔','💍','👜','📱','👠','⌚','🧥','👟'];
+    const items = ICONS.map((icon, i) => ({
+      icon,
+      x: Math.random() * 800,
+      y: Math.random() * 500,
+      z: Math.random() * 600 + 200,   // depth 200–800
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.3,
+      vz: (Math.random() - 0.5) * 0.8,
+      rotX: Math.random() * Math.PI * 2,
+      rotY: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.02,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    // ── Gold particles ──
+    const particles = Array.from({ length: 80 }, () => ({
+      x: Math.random() * 800,
+      y: Math.random() * 500,
+      r: Math.random() * 2 + 0.5,
+      alpha: Math.random() * 0.6 + 0.1,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -Math.random() * 0.5 - 0.1,
+      life: Math.random(),
+    }));
+
+    // ── Orbiting rings ──
+    const rings = [
+      { cx: 0.5, cy: 0.5, rx: 0.42, ry: 0.14, angle: 0, speed: 0.004, tilt: 0.3, alpha: 0.18 },
+      { cx: 0.5, cy: 0.5, rx: 0.55, ry: 0.10, angle: Math.PI/3, speed: -0.003, tilt: -0.2, alpha: 0.12 },
+      { cx: 0.5, cy: 0.5, rx: 0.30, ry: 0.18, angle: Math.PI, speed: 0.006, tilt: 0.5, alpha: 0.10 },
+    ];
+
+    // ── Mouse parallax ──
+    let mouseX = 0.5, mouseY = 0.5;
+    canvas.closest('.store-hero').addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = (e.clientX - rect.left) / rect.width;
+      mouseY = (e.clientY - rect.top) / rect.height;
+    });
+
+    let t = 0;
+
+    function draw() {
+      const w = W(), h = H();
+      ctx.clearRect(0, 0, w, h);
+
+      // Background gradient
+      const bg = ctx.createRadialGradient(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, w * 0.7);
+      bg.addColorStop(0, '#1a1205');
+      bg.addColorStop(0.5, '#0f0d02');
+      bg.addColorStop(1, '#000000');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      // Gold spotlight from mouse
+      const spot = ctx.createRadialGradient(mouseX * w, mouseY * h, 0, mouseX * w, mouseY * h, w * 0.5);
+      spot.addColorStop(0, GOLD + '0.08)');
+      spot.addColorStop(1, 'transparent');
+      ctx.fillStyle = spot;
+      ctx.fillRect(0, 0, w, h);
+
+      // ── Draw orbiting rings ──
+      rings.forEach(ring => {
+        ring.angle += ring.speed;
+        ctx.save();
+        ctx.translate(ring.cx * w, ring.cy * h);
+        ctx.scale(1, ring.tilt + 0.4);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, ring.rx * w, ring.ry * h, ring.angle, 0, Math.PI * 2);
+        const grad = ctx.createLinearGradient(-ring.rx * w, 0, ring.rx * w, 0);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(0.3, GOLD + ring.alpha + ')');
+        grad.addColorStop(0.5, GOLD2 + (ring.alpha * 1.5) + ')');
+        grad.addColorStop(0.7, GOLD + ring.alpha + ')');
+        grad.addColorStop(1, 'transparent');
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // ── Draw gold grid lines (perspective floor) ──
+      ctx.save();
+      ctx.globalAlpha = 0.06;
+      const horizon = h * 0.65;
+      const vp = { x: w * 0.5 + (mouseX - 0.5) * 40, y: horizon };
+      for (let i = -8; i <= 8; i++) {
+        const bx = w * 0.5 + i * (w / 10);
+        ctx.beginPath();
+        ctx.moveTo(vp.x, vp.y);
+        ctx.lineTo(bx, h + 20);
+        ctx.strokeStyle = GOLD + '1)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+      for (let i = 0; i <= 6; i++) {
+        const py = horizon + (h - horizon) * (i / 6);
+        const spread = (py - horizon) / (h - horizon);
+        ctx.beginPath();
+        ctx.moveTo(vp.x - spread * w * 0.8, py);
+        ctx.lineTo(vp.x + spread * w * 0.8, py);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // ── Draw floating product icons ──
+      items.forEach(item => {
+        item.x += item.vx + (mouseX - 0.5) * 0.3;
+        item.y += item.vy + (mouseY - 0.5) * 0.2;
+        item.z += item.vz;
+        item.rotX += item.rotSpeed;
+        item.rotY += item.rotSpeed * 0.7;
+        item.phase += 0.012;
+
+        // Wrap edges
+        if (item.x < -80) item.x = w + 60;
+        if (item.x > w + 80) item.x = -60;
+        if (item.y < -80) item.y = h + 60;
+        if (item.y > h + 80) item.y = -60;
+        if (item.z < 150) item.vz = Math.abs(item.vz);
+        if (item.z > 900) item.vz = -Math.abs(item.vz);
+
+        // Perspective scale
+        const scale = 450 / item.z;
+        const px = item.x * (w / 800);
+        const py = item.y * (h / 500);
+        const size = Math.max(10, 42 * scale);
+        const alpha = Math.min(0.9, Math.max(0.08, scale * 0.7));
+        const bob = Math.sin(item.phase) * 4;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(px, py + bob);
+
+        // 3D shadow / glow
+        const glowSize = size * 2.2;
+        const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+        glow.addColorStop(0, GOLD + (alpha * 0.25) + ')');
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Skew for 3D rotation feel
+        const skewX = Math.sin(item.rotY) * 0.25;
+        const scaleY = Math.abs(Math.cos(item.rotX)) * 0.4 + 0.6;
+        ctx.transform(1, 0, skewX, scaleY, 0, 0);
+
+        ctx.font = size + 'px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(item.icon, 0, 0);
+        ctx.restore();
+      });
+
+      // ── Draw gold particles ──
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.003;
+        if (p.life <= 0) {
+          p.x = Math.random() * w;
+          p.y = h + 10;
+          p.life = Math.random() * 0.7 + 0.3;
+          p.alpha = Math.random() * 0.5 + 0.1;
+        }
+        ctx.save();
+        ctx.globalAlpha = p.alpha * p.life;
+        ctx.fillStyle = GOLD2 + '1)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // ── Centre glow pulse ──
+      const pulse = 0.7 + Math.sin(t * 0.03) * 0.3;
+      const centre = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w * 0.25);
+      centre.addColorStop(0, GOLD + (0.08 * pulse) + ')');
+      centre.addColorStop(1, 'transparent');
+      ctx.fillStyle = centre;
+      ctx.fillRect(0, 0, w, h);
+
+      t++;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  }
+
+  // Init after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHero);
+  } else {
+    initHero();
+  }
+})();
+</script>
 
 <script>
 // ════════════════════════════
